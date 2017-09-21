@@ -17,6 +17,7 @@ class Day extends Component {
     theme: PropTypes.object,
     marked: PropTypes.any,
     onPress: PropTypes.func,
+    onLongPress: PropTypes.func,
     day: PropTypes.object,
     markingExists: PropTypes.bool,
   };
@@ -25,14 +26,19 @@ class Day extends Component {
     super(props);
     this.style = styleConstructor(props.theme);
     this.onDayPress = this.onDayPress.bind(this);
+    this.onLongPress = this.onLongPress.bind(this);
   }
 
   onDayPress() {
     this.props.onPress(this.props.day);
   }
 
+  onDayLongPress() {
+    this.props.onLongPress(this.props.day);
+  }
+
   shouldComponentUpdate(nextProps) {
-    return ['state', 'children', 'marked', 'onPress', 'markingExists'].reduce((prev, next) => {
+    return ['state', 'children', 'marked', 'onPress', 'onLongPress', 'markingExists'].reduce((prev, next) => {
       if (prev || nextProps[next] !== this.props[next]) {
         return true;
       }
@@ -69,7 +75,7 @@ class Day extends Component {
       textStyle.push(this.style.todayText);
     }
     return (
-      <TouchableOpacity style={containerStyle} onPress={this.onDayPress}>
+      <TouchableOpacity style={containerStyle} onPress={this.onDayPress} onLongPress={this.onDayLongPress}>
         <Text style={textStyle}>{String(this.props.children)}</Text>
         {dot}
       </TouchableOpacity>
