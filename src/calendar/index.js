@@ -53,6 +53,7 @@ class Calendar extends Component {
 
     // Handler which gets executed on day press. Default = undefined
     onDayPress: PropTypes.func,
+    onDayLongPress: PropTypes.func,
     // Handler which gets executed when visible month changes in calendar. Default = undefined
     onMonthChange: PropTypes.func,
     onVisibleMonthsChange: PropTypes.func,
@@ -83,6 +84,7 @@ class Calendar extends Component {
     this.addMonth = this.addMonth.bind(this);
     this.isSelected = this.isSelected.bind(this);
     this.pressDay = this.pressDay.bind(this);
+    this.longPressDay = this.longPressDay.bind(this);
     this.shouldComponentUpdate = shouldComponentUpdate;
   }
 
@@ -124,6 +126,20 @@ class Calendar extends Component {
       }
       if (this.props.onDayPress) {
         this.props.onDayPress(xdateToData(day));
+      }
+    }
+  }
+
+  longPressDay(day) {
+    const minDate = parseDate(this.props.minDate);
+    const maxDate = parseDate(this.props.maxDate);
+    if (!(minDate && !dateutils.isGTE(day, minDate)) && !(maxDate && !dateutils.isLTE(day, maxDate))) {
+      const shouldUpdateMonth = this.props.disableMonthChange === undefined || !this.props.disableMonthChange;
+      if (shouldUpdateMonth) {
+        this.updateMonth(day);
+      }
+      if (this.props.onDayLongPress) {
+        this.props.onDayLongPress(xdateToData(day));
       }
     }
   }
@@ -174,6 +190,7 @@ class Calendar extends Component {
             state={state}
             theme={this.props.theme}
             onPress={this.pressDay}
+            onLongPress={this.longPressDay}
             day={day}
             marked={this.getDateMarking(day)}
             markingExists={markingExists}
