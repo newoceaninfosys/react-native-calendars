@@ -20,6 +20,7 @@ class Day extends Component {
     marked: PropTypes.any,
 
     onPress: PropTypes.func,
+    onLongPress: PropTypes.func,
     day: PropTypes.object,
 
     markingExists: PropTypes.bool,
@@ -31,10 +32,15 @@ class Day extends Component {
     this.style = styleConstructor(props.theme);
     this.markingStyle = this.getDrawingStyle(props.marked);
     this.onDayPress = this.onDayPress.bind(this);
+    this.onDayLongPress = this.onDayLongPress.bind(this);
   }
 
   onDayPress() {
     this.props.onPress(this.props.day);
+  }
+
+  onDayLongPress() {
+    this.props.onLongPress(this.props.day);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -180,7 +186,7 @@ class Day extends Component {
     }
 
     return (
-      <TouchableWithoutFeedback onPress={this.onDayPress}>
+      <TouchableWithoutFeedback onPress={this.onDayPress} onLongPress={this.onDayLongPress}>
         <View style={this.style.wrapper}>
           {fillers}
           <View style={containerStyle}>
