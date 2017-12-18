@@ -17,11 +17,11 @@ class Day extends Component {
 
     // Specify theme properties to override specific styles for calendar parts. Default = {}
     theme: PropTypes.object,
-    marked: PropTypes.any,
+    marking: PropTypes.any,
 
     onPress: PropTypes.func,
     onLongPress: PropTypes.func,
-    day: PropTypes.object,
+    date: PropTypes.object,
 
     markingExists: PropTypes.bool,
   };
@@ -30,21 +30,21 @@ class Day extends Component {
     super(props);
     this.theme = {...defaultStyle, ...(props.theme || {})};
     this.style = styleConstructor(props.theme);
-    this.markingStyle = this.getDrawingStyle(props.marked);
+    this.markingStyle = this.getDrawingStyle(props.marking || []);
     this.onDayPress = this.onDayPress.bind(this);
     this.onDayLongPress = this.onDayLongPress.bind(this);
   }
 
   onDayPress() {
-    this.props.onPress(this.props.day);
+    this.props.onPress(this.props.date);
   }
 
   onDayLongPress() {
-    this.props.onLongPress(this.props.day);
+    this.props.onLongPress(this.props.date);
   }
 
   shouldComponentUpdate(nextProps) {
-    const newMarkingStyle = this.getDrawingStyle(nextProps.marked);
+    const newMarkingStyle = this.getDrawingStyle(nextProps.marking);
 
     if (JSON.stringify(this.markingStyle) !== JSON.stringify(newMarkingStyle)) {
       this.markingStyle = newMarkingStyle;
@@ -60,11 +60,16 @@ class Day extends Component {
   }
 
   getDrawingStyle(marking) {
+    const defaultStyle = {textStyle: {}};
     if (!marking) {
-      return {};
+      return defaultStyle;
     }
-    return marking.reduce((prev, next) => {
-      prev.textStyle = {};
+    if (this.props.marking.disabled) {
+      defaultStyle.textStyle.color = this.theme.textDisabledColor;
+    } else if (this.props.marking.selected) {
+      defaultStyle.textStyle.color = this.theme.selectedDayTextColor;
+    }
+    const resultStyle = ([marking]).reduce((prev, next) => {
       if (next.quickAction) {
         if (next.first || next.last) {
           prev.containerStyle = this.style.firstQuickAction;
@@ -107,7 +112,8 @@ class Day extends Component {
         prev.textStyle.color = next.textColor;
       }
       return prev;
-    }, {});
+    }, defaultStyle);
+    return resultStyle;
   }
 
   render() {
@@ -115,6 +121,7 @@ class Day extends Component {
     const textStyle = [this.style.text];
     let leftFillerStyle = {};
     let rightFillerStyle = {};
+    let fillerStyle = {};
     let fillers;
 
     if (this.props.state === 'disabled') {
@@ -123,7 +130,7 @@ class Day extends Component {
       textStyle.push(this.style.todayText);
     }
 
-    if (this.props.marked) {
+    if (this.props.marking) {
       containerStyle.push({
         borderRadius: 17
       });
@@ -165,6 +172,8 @@ class Day extends Component {
       } else if (flags.day) {
         leftFillerStyle = {backgroundColor: flags.day.color};
         rightFillerStyle = {backgroundColor: flags.day.color};
+        // #177 bug
+        fillerStyle = {backgroundColor: flags.day.color};
       } else if (flags.endingDay && flags.startingDay) {
         rightFillerStyle = {
           backgroundColor: this.theme.calendarBackground
@@ -178,7 +187,7 @@ class Day extends Component {
       }
 
       fillers = (
-        <View style={this.style.fillers}>
+        <View style={[this.style.fillers, fillerStyle]}>
           <View style={[this.style.leftFiller, leftFillerStyle]}/>
           <View style={[this.style.rightFiller, rightFillerStyle]}/>
         </View>

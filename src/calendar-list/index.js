@@ -24,6 +24,9 @@ class CalendarList extends Component {
 
     // Enable or disable scrolling of calendar list
     scrollEnabled: PropTypes.bool,
+
+    // Enable or disable vertical scroll indicator. Default = false
+    showScrollIndicator: PropTypes.bool,
   };
 
   constructor(props) {
@@ -35,17 +38,20 @@ class CalendarList extends Component {
     const texts = [];
     const date = parseDate(props.current) || XDate();
     for (let i = 0; i <= this.pastScrollRange + this.futureScrollRange; i++) {
-      const text = date.clone().addMonths(i - this.pastScrollRange).toString('MMM yyyy');
-      rows.push(text);
-      texts.push(text);
+      const rangeDate = date.clone().addMonths(i - this.pastScrollRange, true);
+      const rangeDateStr = rangeDate.toString('MMM yyyy');
+      texts.push(rangeDateStr);
+      /*
+       * This selects range around current shown month [-0, +2] or [-1, +1] month for detail calendar rendering.
+       * If `this.pastScrollRange` is `undefined` it's equal to `false` or 0 in next condition.
+       */
+      if (this.pastScrollRange - 1 <= i && i <= this.pastScrollRange + 1 || !this.pastScrollRange && i <= this.pastScrollRange + 2) {
+        rows.push(rangeDate);
+      } else {
+        rows.push(rangeDateStr);
+      }
     }
-    rows[this.pastScrollRange] = date;
-    rows[this.pastScrollRange + 1] = date.clone().addMonths(1, true);
-    if (this.pastScrollRange) {
-      rows[this.pastScrollRange - 1] = date.clone().addMonths(-1, true);
-    } else {
-      rows[this.pastScrollRange + 2] = date.clone().addMonths(2, true);
-    }
+
     this.state = {
       rows,
       texts,
@@ -53,6 +59,9 @@ class CalendarList extends Component {
       initialized: false
     };
     this.lastScrollPosition = -1000;
+    
+    this.onViewableItemsChangedBound = this.onViewableItemsChanged.bind(this);
+    this.renderCalendarBound = this.renderCalendar.bind(this);
   }
 
   scrollToDay(d, offset, animated) {
@@ -163,9 +172,9 @@ class CalendarList extends Component {
         //snapToInterval={calendarHeight}
         removeClippedSubviews={Platform.OS === 'android' ? false : true}
         pageSize={1}
-        onViewableItemsChanged={this.onViewableItemsChanged.bind(this)}
-        renderItem={this.renderCalendar.bind(this)}
-        showsVerticalScrollIndicator={false}
+        onViewableItemsChanged={this.onViewableItemsChangedBound}
+        renderItem={this.renderCalendarBound}
+        showsVerticalScrollIndicator={this.props.showScrollIndicator !== undefined ? this.props.showScrollIndicator : false}
         scrollEnabled={this.props.scrollingEnabled !== undefined ? this.props.scrollingEnabled : true}
         keyExtractor={(item, index) => index}
         initialScrollIndex={this.state.openDate ? this.getMonthIndex(this.state.openDate) : false}
