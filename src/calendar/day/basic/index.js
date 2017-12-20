@@ -93,6 +93,7 @@ class Day extends Component {
     } else if (this.props.state === 'today') {
       textStyle.push(this.style.todayText);
     }
+
     return (
       <TouchableOpacity
         style={containerStyle}

@@ -9,8 +9,9 @@
 	"dependencies": {
 		"react": "16.0.0-alpha.12",
 		"react-native": "0.47.2",
-		"react-native-calendars": "^1.5.8",
-		"react-native-navigation": "^1.1.205"
+		"react-native-calendars": "file:../src",
+		"react-native-navigation": "^1.1.205",
+		"xdate": "^0.8.2"
 	},
 	"devDependencies": {
 		"babel-jest": "20.0.3",

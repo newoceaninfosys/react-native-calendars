@@ -10,34 +10,47 @@ class CalendarHeader extends Component {
   static propTypes = {
     theme: PropTypes.object,
     hideArrows: PropTypes.bool,
-    month: PropTypes.instanceOf(XDate),
+    month: PropTypes.number,
+    year: PropTypes.number,
     addMonth: PropTypes.func,
     showIndicator: PropTypes.bool,
     firstDay: PropTypes.number,
     renderArrow: PropTypes.func,
     hideDayNames: PropTypes.bool,
-    weekNumbers: PropTypes.bool
+    weekNumbers: PropTypes.bool,
+    onMonthPress: PropTypes.func,
+    mode: PropTypes.string
   };
 
   constructor(props) {
     super(props);
     this.style = styleConstructor(props.theme);
-    this.addMonth = this.addMonth.bind(this);
-    this.substractMonth = this.substractMonth.bind(this);
+    this.add = this.add.bind(this);
+    this.substract = this.substract.bind(this);
+    this.getYearRange = this.getYearRange.bind(this);
   }
 
-  addMonth() {
-    this.props.addMonth(1);
+  add() {
+    this.props.add(1);
   }
 
-  substractMonth() {
-    this.props.addMonth(-1);
+  substract() {
+    this.props.add(-1);
+  }
+
+  getYearRange() {
+    const start = -5;
+    const end = 6;
+    const viewYear = this.props.year;
+    
+    return (viewYear + start) + ' - ' + (viewYear + end);
   }
 
   shouldComponentUpdate(nextProps) {
     if (
-      nextProps.month.toString('yyyy MM') !==
-      this.props.month.toString('yyyy MM')
+      (nextProps.month !== this.props.month) ||
+      (nextProps.year !== this.props.year) ||
+      (nextProps.mode !== this.props.mode) // mode changed
     ) {
       return true;
     }
@@ -48,52 +61,66 @@ class CalendarHeader extends Component {
   }
 
   render() {
-    let leftArrow = <View />;
-    let rightArrow = <View />;
+    const isDayMode = this.props.mode === 'day';
+    const isMonthMode = this.props.mode === 'month';
+    const isYearMode = this.props.mode === 'year';
+    let headerFormat = this.props.monthFormat ? this.props.monthFormat : 'MMMM yyyy';
+    if (isMonthMode) {
+      headerFormat = 'yyyy';
+    }
+
+    let leftArrow = <View/>;
+    let rightArrow = <View/>;
     let weekDaysNames = weekDayNames(this.props.firstDay);
     if (!this.props.hideArrows) {
       leftArrow = (
         <TouchableOpacity
-          onPress={this.substractMonth}
+          onPress={this.substract}
           style={this.style.arrow}
         >
           {this.props.renderArrow
             ? this.props.renderArrow('left')
             : <Image
-                source={require('../img/previous.png')}
-                style={this.style.arrowImage}
-              />}
+              source={require('../img/previous.png')}
+              style={this.style.arrowImage}
+            />}
         </TouchableOpacity>
       );
       rightArrow = (
-        <TouchableOpacity onPress={this.addMonth} style={this.style.arrow}>
+        <TouchableOpacity onPress={this.add} style={this.style.arrow}>
           {this.props.renderArrow
             ? this.props.renderArrow('right')
             : <Image
-                source={require('../img/next.png')}
-                style={this.style.arrowImage}
-              />}
+              source={require('../img/next.png')}
+              style={this.style.arrowImage}
+            />}
         </TouchableOpacity>
       );
     }
     let indicator;
     if (this.props.showIndicator) {
-      indicator = <ActivityIndicator />;
+      indicator = <ActivityIndicator/>;
     }
     return (
       <View>
         <View style={this.style.header}>
           {leftArrow}
           <View style={{ flexDirection: 'row' }}>
-            <Text style={this.style.monthText}>
-              {this.props.month.toString(this.props.monthFormat ? this.props.monthFormat : 'MMMM yyyy')}
-            </Text>
+            <TouchableOpacity onPress={this.props.onMonthPress}>
+              <Text style={this.style.monthText}>
+                {
+                  isDayMode ? XDate().setMonth(this.props.month).setFullYear(this.props.year).toString(headerFormat) :
+                    isMonthMode ? XDate().setFullYear(this.props.year).toString('yyyy') : this.getYearRange()
+                }
+              </Text>
+            </TouchableOpacity>
             {indicator}
           </View>
           {rightArrow}
         </View>
         {
           !this.props.hideDayNames &&
+          isDayMode &&
           <View style={this.style.week}>
             {this.props.weekNumbers && <Text style={this.style.dayHeader}></Text>}
             {weekDaysNames.map((day, idx) => (

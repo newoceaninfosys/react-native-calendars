@@ -18,6 +18,19 @@ export default function getStyle(theme={}) {
       flexDirection: 'row',
       justifyContent: 'space-around'
     },
+    month: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: '#cccccc'
+    },
+    monthRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    yearRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
     ...(theme[STYLESHEET_ID] || {})
   });
 }
