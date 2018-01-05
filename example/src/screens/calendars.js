@@ -27,16 +27,16 @@ export default class CalendarsScreen extends Component {
         <Text style={styles.text}>Calendar with marked dates and hidden arrows</Text>
         <Calendar
           style={styles.calendar}
-          current={'2012-05-16'}
-          minDate={'2012-05-10'}
-          maxDate={'2012-05-29'}
+          current={'2017-12-16'}
+          minDate={'2017-12-10'}
+          maxDate={'2017-12-29'}
           firstDay={1}
           markedDates={{
-            '2012-05-23': {selected: true, marked: true},
-            '2012-05-24': {selected: true, marked: true, dotColor: 'green'},
-            '2012-05-25': {marked: true, dotColor: 'red'},
-            '2012-05-26': {marked: true},
-            '2012-05-27': {disabled: true}
+            '2017-12-23': {selected: true, marked: true},
+            '2017-12-24': {selected: true, marked: true, dotColor: 'green'},
+            '2017-12-25': {marked: true, dotColor: 'red'},
+            '2017-12-26': {marked: true},
+            '2017-12-27': {disabled: true}
           }}
           // disabledByDefault={true}
           hideArrows={true}

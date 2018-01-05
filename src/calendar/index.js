@@ -182,7 +182,8 @@ class Calendar extends Component {
     }
   }
 
-  longPressDay(day) {
+  longPressDay(date) {
+    const day = parseDate(date);
     const minDate = parseDate(this.props.minDate);
     const maxDate = parseDate(this.props.maxDate);
     if (!(minDate && !dateutils.isGTE(day, minDate)) && !(maxDate && !dateutils.isLTE(day, maxDate))) {
@@ -197,7 +198,7 @@ class Calendar extends Component {
   }
 
   pressMonth(monthNum, yearNum) {
-    const date = XDate();
+    // const date = XDate();
     this.setState({
       mode: 'day',
       currentMonth: monthNum,
@@ -206,7 +207,7 @@ class Calendar extends Component {
   }
 
   pressYear(yearNum) {
-    const date = XDate();
+    // const date = XDate();
     this.setState({
       mode: 'month',
       currentYear: yearNum
