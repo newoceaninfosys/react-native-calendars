@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, {Component} from 'react';
+import {ActivityIndicator} from 'react-native';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 import XDate from 'xdate';
 import PropTypes from 'prop-types';
 import styleConstructor from './style';
-import { weekDayNames } from '../../dateutils';
+import {weekDayNames} from '../../dateutils';
 
 class CalendarHeader extends Component {
   static propTypes = {
@@ -42,7 +42,7 @@ class CalendarHeader extends Component {
     const start = -5;
     const end = 6;
     const viewYear = this.props.year;
-    
+
     return (viewYear + start) + ' - ' + (viewYear + end);
   }
 
@@ -101,15 +101,16 @@ class CalendarHeader extends Component {
     if (this.props.showIndicator) {
       indicator = <ActivityIndicator/>;
     }
+
     return (
       <View>
         <View style={this.style.header}>
           {leftArrow}
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{flexDirection: 'row'}}>
             <TouchableOpacity onPress={this.props.onMonthPress}>
               <Text style={this.style.monthText}>
                 {
-                  isDayMode ? XDate().setMonth(this.props.month).setFullYear(this.props.year).toString(headerFormat) :
+                  isDayMode ? XDate().setDate(1).setMonth(this.props.month).setFullYear(this.props.year).toString(headerFormat) :
                     isMonthMode ? XDate().setFullYear(this.props.year).toString('yyyy') : this.getYearRange()
                 }
               </Text>

@@ -1,6 +1,6 @@
 {
   "name": "@nois/react-native-calendars",
-  "version": "1.20.1",
+  "version": "1.21.0",
   "main": "src/index.js",
   "description": "React Native Calendar Components",
   "scripts": {
@@ -22,11 +22,15 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
+    "babel-jest": "22.1.0",
+    "babel-preset-react-native": "4.0.0",
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^7.0.0",
     "jasmine": "^2.5.2",
+    "jest": "22.1.4",
     "react": "16.0.0-alpha.12",
-    "react-native": "0.47.2"
+    "react-native": "0.47.2",
+    "react-test-renderer": "16.2.0"
   },
   "bugs": {
     "url": "https://github.com/newoceaninfosys/react-native-calendars/issues"

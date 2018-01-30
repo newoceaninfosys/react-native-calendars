@@ -396,7 +396,7 @@ class Calendar extends Component {
 
   render() {
     const { mode, currentYear, currentMonth } = this.state;
-    const days = dateutils.page(XDate().setMonth(currentMonth).setFullYear(currentYear), this.props.firstDay);
+    const days = dateutils.page(XDate().setDate(1).setMonth(currentMonth).setFullYear(currentYear), this.props.firstDay);
     const _months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     const weeks = [];
     const months = [];
