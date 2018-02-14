@@ -57,6 +57,9 @@ class CalendarHeader extends Component {
     if (nextProps.showIndicator !== this.props.showIndicator) {
       return true;
     }
+    if (nextProps.hideDayNames !== this.props.hideDayNames) {
+      return true;
+    }
     return false;
   }
 
@@ -108,7 +111,7 @@ class CalendarHeader extends Component {
           {leftArrow}
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity onPress={this.props.onMonthPress}>
-              <Text style={this.style.monthText}>
+              <Text allowFontScaling={false} style={this.style.monthText}>
                 {
                   isDayMode ? XDate().setDate(1).setMonth(this.props.month).setFullYear(this.props.year).toString(headerFormat) :
                     isMonthMode ? XDate().setFullYear(this.props.year).toString('yyyy') : this.getYearRange()
@@ -123,9 +126,9 @@ class CalendarHeader extends Component {
           !this.props.hideDayNames &&
           isDayMode &&
           <View style={this.style.week}>
-            {this.props.weekNumbers && <Text style={this.style.dayHeader}></Text>}
+            {this.props.weekNumbers && <Text allowFontScaling={false} style={this.style.dayHeader}></Text>}
             {weekDaysNames.map((day, idx) => (
-              <Text key={idx} style={this.style.dayHeader} numberOfLines={1}>{day}</Text>
+              <Text allowFontScaling={false} key={idx} style={this.style.dayHeader} numberOfLines={1}>{day}</Text>
             ))}
           </View>
         }

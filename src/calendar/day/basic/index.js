@@ -75,6 +75,7 @@ class Day extends Component {
         marking: true
       };
     }
+    const isDisabled = typeof marking.disabled !== 'undefined' ? marking.disabled : this.props.state === 'disabled';
     let dot;
     if (marking.marked) {
       dotStyle.push(this.style.visibleDot);
@@ -86,9 +87,12 @@ class Day extends Component {
 
     if (marking.selected) {
       containerStyle.push(this.style.selected);
+      if (marking.selectedColor) {
+        containerStyle.push({backgroundColor: marking.selectedColor});
+      }
       dotStyle.push(this.style.selectedDot);
       textStyle.push(this.style.selectedText);
-    } else if (typeof marking.disabled !== 'undefined' ? marking.disabled : this.props.state === 'disabled') {
+    } else if (isDisabled) {
       textStyle.push(this.style.disabledText);
     } else if (this.props.state === 'today') {
       textStyle.push(this.style.todayText);
@@ -99,13 +103,10 @@ class Day extends Component {
         style={containerStyle}
         onPress={this.onDayPress}
         onLongPress={this.onDayLongPress}
-        disabled={
-          typeof marking.disabled !== 'undefined'
-            ? marking.disabled
-            : this.props.state === 'disabled'
-        }
+        activeOpacity={marking.activeOpacity}
+        disabled={marking.disableTouchEvent}
       >
-        <Text style={textStyle}>{String(this.props.children)}</Text>
+        <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
         {dot}
       </TouchableOpacity>
     );

@@ -1,6 +1,6 @@
 {
   "name": "@nois/react-native-calendars",
-  "version": "1.21.0",
+  "version": "1.22.0",
   "main": "src/index.js",
   "description": "React Native Calendar Components",
   "scripts": {
@@ -21,6 +21,7 @@
     "xdate": "^0.8.2"
   },
   "devDependencies": {
+    "eslint": "^3.19.0",
     "babel-eslint": "^7.2.3",
     "babel-jest": "22.1.0",
     "babel-preset-react-native": "4.0.0",
